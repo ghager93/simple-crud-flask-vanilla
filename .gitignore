@@ -1,0 +1,3 @@
+app/api/
+/venv
+*__pycache__/
