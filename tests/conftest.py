@@ -21,9 +21,11 @@ def app():
 @pytest.fixture
 def mocked_db_app(mocker: MockerFixture):
     """Flask application from test project instance"""
-    from app import app
+    import app
 
-    mocker.patch("app.models.db")
+    app = app.create_app()
+
+    # mocker.patch("app.models.db")
 
     app.config.update(
         {

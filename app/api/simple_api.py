@@ -1,5 +1,5 @@
 from flask import Blueprint
-# from flask.views import MethodView
+from flask.views import MethodView
 
 
 bp = Blueprint("simple", __name__)
@@ -10,12 +10,9 @@ def hello_world():
     return "hello world!"
 
 
-# class SimpleAPI(MethodView):
-#     def get(self):
-#         return "get"
-
-#     def post(self):
-#         return "post"
+class SimpleAPI(MethodView):
+    def post(self):
+        return "post"
 
 
-# simple = SimpleAPI.as_view("simple")
+simple = SimpleAPI.as_view("simple")
