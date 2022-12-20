@@ -4,7 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-# from app import api
+from app import api
 # from app.api import simple_api
 
 
@@ -27,7 +27,7 @@ def create_app():
         pass
 
     # register all blueprints
-    # app.register_blueprint(api.simple_bp, url_prefix="/")
+    app.register_blueprint(api.simple_bp, url_prefix="/")
     # app.add_url_rule("/simple/", view_func=simple_api.simple)
 
     db.init_app(app)
