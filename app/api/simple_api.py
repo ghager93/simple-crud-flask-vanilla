@@ -6,7 +6,7 @@ bp = Blueprint("simple", __name__)
 
 
 @bp.route("/helloworld", methods=["GET"])
-def hello():
+def hello_world():
     return "hello world!"
 
 
