@@ -4,9 +4,6 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-from app import api
-# from app.api import simple_api
-
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -26,12 +23,16 @@ def create_app():
     except OSError:
         pass
 
+    from app import api
+
     # register all blueprints
     app.register_blueprint(api.simple_bp, url_prefix="/")
-    # app.add_url_rule("/simple/", view_func=simple_api.simple)
 
     db.init_app(app)
     migrate.init_app(app, db)
+
+    with app.app_context():
+        db.create_all()
 
     # register before request middleware
     # before_request_middleware(app=app)
