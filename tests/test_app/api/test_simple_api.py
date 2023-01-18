@@ -57,3 +57,36 @@ def test_post_invalid_not_saved_to_db(mocked_db_client):
     result = mocked_db_client.get("/simple/")
 
     assert result.json == []
+
+
+def test_get_all_2xx_status(mocked_db_client):
+    result = mocked_db_client.get("/simple/")
+
+    assert 200 <= result.status_code < 300
+
+
+def test_get_all_empty_return(mocked_db_client):
+    result = mocked_db_client.get("/simple/")
+
+    assert result.json == []
+
+
+def test_get_all_one_return(mocked_db_client):
+    sample_payload = {"string": "test"}
+
+    mocked_db_client.post("/simple/", json=sample_payload)
+
+    result = mocked_db_client.get("/simple/")
+
+    assert result.json == [sample_payload]
+
+
+def test_get_all_three_return(mocked_db_client):
+    sample_payloads = [{"string": str(i)} for i in range(3)]
+    
+    [mocked_db_client.post("/simple/", json=sample_payloads[i]) for i in range(3)]
+
+    result = mocked_db_client.get("/simple/")
+
+    assert set(e["string"] for e in result.json) == set(e["string"] for e in sample_payloads)
+

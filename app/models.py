@@ -11,7 +11,7 @@ class Simple(db.Model):
     string = sa.Column(sa.String)
 
     def to_json(self):
-        return {c.name: getattr(self, c) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns if c.name != "id"}
 
     @staticmethod
     def from_json(json):
