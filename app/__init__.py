@@ -11,7 +11,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 
-def create_app(config):
+def create_app(config=config.DevConfig):
     # initialize flask application
     app = Flask(__name__, instance_relative_config=True)
 

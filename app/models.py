@@ -1,6 +1,7 @@
 import sqlalchemy as sa
 
 from app import db
+from app import exceptions
 
 
 class Simple(db.Model):
@@ -11,3 +12,14 @@ class Simple(db.Model):
 
     def to_json(self):
         return {"string": self.string}
+
+    @staticmethod
+    def from_json(json):
+        try:
+            simple = Simple(
+                string=json["string"]
+            )
+            return simple
+        except KeyError as e:
+            raise exceptions.ValidationError(e)
+
