@@ -37,5 +37,19 @@ class SimpleAPI(MethodView):
         return [item.to_json() for item in self.model.query.all()]
 
 
+class SimpleIdAPI(MethodView):
+    init_every_request = False
+
+    def __init__(self, model):
+        self.model = model
+
+    def get(self, id):
+        item = self.model.query.get_or_404(id)
+        return item.to_json()
+
+
 simple = SimpleAPI.as_view("simple", Simple)
+simple_id = SimpleIdAPI.as_view("simpleid", Simple)
+
 bp.add_url_rule("/simple/", view_func=simple)
+bp.add_url_rule("/simple/<int:id>", view_func=simple_id)
