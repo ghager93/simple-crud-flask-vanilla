@@ -4,18 +4,19 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
+from instance import config
+
 
 db = SQLAlchemy()
 migrate = Migrate()
 
 
-def create_app():
+def create_app(config):
     # initialize flask application
     app = Flask(__name__, instance_relative_config=True)
 
-    app.config.from_pyfile('config.py', silent=True)
+    app.config.from_object(config)
 
-    app.config.from_mapping(DATABASE=os.path.join(app.instance_path, 'app.db'))
 
     # Ensure the instance folder exists
     try:
@@ -31,8 +32,8 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.create_all()
 
     # register before request middleware
     # before_request_middleware(app=app)
@@ -53,5 +54,6 @@ def create_app():
 
 
 if __name__ == "__main__":
-    app = create_app()
+    app = create_app(config.DevConfig)
+    db.create_all()
     app.run(host="0.0.0.0", port="5000")

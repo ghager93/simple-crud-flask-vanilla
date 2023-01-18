@@ -8,3 +8,6 @@ class Simple(db.Model):
     
     id = sa.Column(sa.Integer, primary_key=True)
     string = sa.Column(sa.String)
+
+    def to_json(self):
+        return {"string": self.string}

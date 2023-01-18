@@ -1,6 +1,7 @@
-from flask import Blueprint
+from flask import Blueprint, request, jsonify
 from flask.views import MethodView
 
+from app import db
 from app.models import Simple
 
 
@@ -17,7 +18,12 @@ class SimpleAPI(MethodView):
         self.model = model 
 
     def post(self):
-        return "post"
+        db.session.add(self.model(**request.json))
+        db.session.commit()
+        return request.json
+
+    def get(self):
+        return [item.to_json() for item in self.model.query.all()]
 
 
 simple = SimpleAPI.as_view("simple", Simple)

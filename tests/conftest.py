@@ -3,40 +3,33 @@ import flask.testing
 
 from pytest_mock import MockerFixture
 
+from instance import config
+
 
 @pytest.fixture
 def app():
     """Flask application from test project instance"""
     import app
     
-    app = app.create_app()
-    app.config.update(
-        {
-            "TESTING": True,
-        }
-    )
+    app = app.create_app(config.TestConfig)
+
     return app
 
 
-@pytest.fixture
+@pytest.fixture()
 def mocked_db_app(mocker: MockerFixture):
     """Flask application from test project instance"""
     import app
+    from app import db
 
-    app = app.create_app()
+    app = app.create_app(config.TestConfig)
 
-    # mocker.patch("app.models.db")
-
-    app.config.update(
-        {
-            "TESTING": True,
-            "SQLALCHEMY_DATABASE_URI": "sqlite:///test_app.db",
-            "SQLALCHEMY_TRACK_MODIFICATIONS": False, 
-        }
-    )
+    mocker.patch("app.db")
 
     with app.app_context():
+        db.create_all()
         yield app
+        db.drop_all()
 
 
 @pytest.fixture()
@@ -46,6 +39,6 @@ def mocked_db_client(mocked_db_app: flask.Flask):
         yield client
 
 
-@pytest.fixture
+@pytest.fixture()
 def client(app):
     return app.test_client()
