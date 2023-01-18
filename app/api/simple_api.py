@@ -14,6 +14,8 @@ def hello_world():
 
 
 class SimpleAPI(MethodView):
+    init_every_request = False
+    
     def __init__(self, model):
         self.model = model 
 

@@ -25,34 +25,35 @@ def test_post_request_no_assert(mocked_db_app: flask.Flask):
     result = mocked_db_app.post("/simple")
 
 
-def test_post_valid_payload_2xx_status(mocked_db_app: flask.Flask):
-    """Test POST 2xx response"""
+def test_post_valid_payload_2xx_status(mocked_db_client):
     sample_payload = {"string": "valid test."}
-
-    with mocked_db_app.test_request_context("api/simple", method="POST", json=sample_payload):
-        result = simple_api.SimpleAPI(Simple).post()
-
-    assert 200 <= result[1] < 300
-
-
-def test_post_valid_payload_2xx_status(mocked_db_client: flask.Flask):
-    sample_payload = {"string": "valid test10."}
 
     result = mocked_db_client.post("/simple/", json=sample_payload)
 
     assert 200 <= result.status_code < 300
 
 
+def test_post_valid_save_to_db(mocked_db_client):
+    sample_payload = {"string": "valid test."}
 
-def test_post_save_to_database(mocked_db_app: flask.Flask):
-    """Test a valid payload is saved to the database."""
-    sample_payload = {"string": "valid test1."}
+    mocked_db_client.post("/simple/", json=sample_payload)
+    result = mocked_db_client.get("/simple/")
 
-    client = mocked_db_app.test_client()
-    client.post("/simple/", json=sample_payload)
-
-    result = client.get("/simple/")
-        
     assert result.json[0] == sample_payload
-    
 
+
+def test_post_invalid_4xx_status(mocked_db_client):
+    sample_payload = {"invalid": "not a valid test."}
+
+    result = mocked_db_client.post("/simple/", json=sample_payload)
+    
+    assert 400 <= result.status_code < 500
+
+
+def test_post_invalid_not_saved_to_db(mocked_db_client):
+    sample_payload = {"invalid": "not a valid test."}
+
+    mocked_db_client.post("/simple/", json=sample_payload)
+    result = mocked_db_client.get("/simple/")
+
+    assert result.json == []
