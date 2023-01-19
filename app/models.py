@@ -13,7 +13,7 @@ class Simple(db.Model):
     name = sa.Column(sa.String)
     number = sa.Column(sa.Integer)
     created_at = sa.Column(sa.DateTime)
-    updatted_at = sa.Column(sa.DateTime)
+    updated_at = sa.Column(sa.DateTime)
 
     def to_json(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns if c.name != "id"}
@@ -28,6 +28,6 @@ class Simple(db.Model):
                 updated_at=created_at,
             )
             return simple
-        except KeyError as e:
+        except (KeyError, TypeError) as e:
             raise exceptions.ValidationError(e)
 
