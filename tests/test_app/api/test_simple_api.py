@@ -121,3 +121,29 @@ def test_get_valid_id(mocked_db_client):
     result = mocked_db_client.get("/simple/1")
 
     assert _pop_datetimes(result.json) == valid_payload
+
+
+def test_delete_valid_id_2xx_status(mocked_db_client):
+    mocked_db_client.post("/simple/", json=valid_payload)
+
+    result = mocked_db_client.delete("/simple/1")
+
+    assert 200 <= result.status_code < 300
+
+
+def test_delete_invalid_id_404_status(mocked_db_client):
+    mocked_db_client.post("/simple/", json=valid_payload)
+    
+    result = mocked_db_client.delete("/simple/2")
+
+    assert result.status_code == 404
+
+
+def test_delete_valid_id(mocked_db_client):
+    mocked_db_client.post("/simple/", json=valid_payload)
+
+    first_result = mocked_db_client.delete("/simple/1")
+    second_result = mocked_db_client.delete("/simple/1")
+
+    assert _pop_datetimes(first_result.json) == valid_payload
+    assert second_result.status_code == 404
