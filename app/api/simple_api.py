@@ -15,6 +15,10 @@ def hello_world():
 
 
 class SimpleAPI(MethodView):
+    """
+    View object for methods that work on the base /simple/ route.
+    I.e. POST and GET (all)
+    """
     init_every_request = False
 
     def __init__(self, model):
@@ -38,6 +42,9 @@ class SimpleAPI(MethodView):
 
 
 class SimpleIdAPI(MethodView):
+    """
+    View object for methods that work on the individual /simple/<id> route.
+    I.e. GET, PATCH, DELETE"""
     init_every_request = False
 
     def __init__(self, model):

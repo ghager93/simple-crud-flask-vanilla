@@ -10,7 +10,7 @@ from instance import config
 def app():
     """Flask application from test project instance"""
     import app
-    
+
     app = app.create_app(config.TestConfig)
 
     return app
