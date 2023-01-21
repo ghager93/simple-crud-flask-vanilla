@@ -47,6 +47,15 @@ class SimpleIdAPI(MethodView):
         item = self.model.query.get_or_404(id)
         return item.to_json()
 
+    def delete(self, id):
+        entry = self.model.query.get_or_404(id)
+        try:
+            db.session.delete(entry)
+            db.session.commit()
+            return entry.to_json()
+        except:
+            return "Error saving to database", 500
+
 
 simple = SimpleAPI.as_view("simple", Simple)
 simple_id = SimpleIdAPI.as_view("simpleid", Simple)
