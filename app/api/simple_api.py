@@ -19,10 +19,11 @@ class SimpleAPI(MethodView):
     View object for methods that work on the base /simple/ route.
     I.e. POST and GET (all)
     """
+
     init_every_request = False
 
     def __init__(self, model):
-        self.model = model 
+        self.model = model
 
     def post(self):
         try:
@@ -45,6 +46,7 @@ class SimpleIdAPI(MethodView):
     """
     View object for methods that work on the individual /simple/<id> route.
     I.e. GET, PATCH, DELETE"""
+
     init_every_request = False
 
     def __init__(self, model):
@@ -58,6 +60,15 @@ class SimpleIdAPI(MethodView):
         entry = self.model.query.get_or_404(id)
         try:
             db.session.delete(entry)
+            db.session.commit()
+            return entry.to_json()
+        except:
+            return "Error deleting from database", 500
+
+    def patch(self, id):
+        entry = self.model.query.get_or_404(id)
+        try:
+            [setattr(entry, attr, val) for attr, val in request.get_json().items()]
             db.session.commit()
             return entry.to_json()
         except:

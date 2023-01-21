@@ -186,7 +186,7 @@ def test_patch_invalid_id_404(mocked_db_client):
 
     result = mocked_db_client.patch("/simple/2", json=patched_name_payload)
 
-    assert result.status_code == 400
+    assert result.status_code == 404
 
 
 def test_patch_valid_id_patch_name(mocked_db_client):
